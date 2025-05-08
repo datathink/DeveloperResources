@@ -2,15 +2,29 @@
   {
     "objectID": "index.html",
     "href": "index.html",
-    "title": "DeveloperResources",
+    "title": "DT Developer Resources",
     "section": "",
     "text": "This is a Quarto website.\nTo learn more about Quarto websites visit https://quarto.org/docs/websites."
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "tabs/r.html",
+    "href": "tabs/r.html",
+    "title": "R",
     "section": "",
-    "text": "About this site"
+    "text": "Package DevelopmentMisc Information\n\n\n\nPacakge Creation\n\n\nTesting\n\n\nDocumenting\n\n\nTips\n\n\n\n\nTidy Expressions vs. Standard Evaluation\n\nTidy Expressions\nTidy expressions are used in functions that leverage tidyselect syntax, like select(), pivot_wider(), and rename(). These functions support special selection helpers like starts_with(), ends_with(), and others. They don’t work well with .data because they expect column names as strings or with selection helpers.\n\n\nStandard Evaluation\nStandard evaluation refers to functions that evaluate arguments directly without special tidyselect syntax. Functions like filter() and mutate() work well with .data$variable because they evaluate expressions directly instead of converting them to strings.\n\n\nSummary\nUse .data$variable for standard evaluation functions like filter().\nUse dplyr::all_of() for functions using tidyselect expressions like pivot_wider().\n\n\n\nFunctions & Quasiquotation ({{}}, !!, :=)\nWhen writing functions that accept column names as arguments, tidy evaluation tools come into play:\n{{}} (Curly-curly): Used within functions to embrace a column name. It is shorthand for enquo() and !!.\n!! (Bang-bang): Unquotes a captured expression, making it evaluated within the context of the data.\n:= (Colon-equals): Often used with dplyr::mutate() and dplyr::summarize() to dynamically assign names to columns.\n\nExample\n\nsummarize_and_mutate &lt;- function(data, group_var, stat_var, new_var_name, multiplier = 1) {\n    data %&gt;%\n        dplyr::group_by({{ group_var }}) %&gt;%\n        dplyr::summarize(mean_value = mean({{ stat_var }}, na.rm = TRUE)) %&gt;%\n        dplyr::mutate(\"{new_var_name}\" := mean_value * !!multiplier)\n}\n\n\n\n\nCommon Errors\n\n1:\nno visible binding for global variable ‘stat_name’\n\ndplyr::filter(stat_name == \"N\")\n\nsolution:\n\ndplyr::filter(.data$stat_name == \"N\")\n\nno visible binding for global variable ‘variable’ no visible binding for global variable ‘stat’\n\ntidyr::pivot_wider(names_from = variable, values_from = stat)\n\nour initial insinct is to use the following after what we just learned but this wont work because of pivot_wider is a tidy select expression like select and arrange\n\ntidyr::pivot_wider(names_from = .data$variable, values_from = .data$stat)\n\n# Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.\n# i Please use `\"stat\"` instead of `.data$stat`\n\nsolution:\n\ntidyr::pivot_wider(names_from = dplyr::all_of(\"variable\"), values_from = dplyr::all_of(\"stat\"))\n\n\n\n\nRStudio Tips/Shortcuts"
+  },
+  {
+    "objectID": "tabs/git.html",
+    "href": "tabs/git.html",
+    "title": "Git",
+    "section": "",
+    "text": "when you have merge conflicts and you have deleted what you don’t want and kept what you do want, after this commit the new updates\n\ngit pull origin main\n\ngit add\n\n\n\n\n\ngit branch -d branch-to-delete\n\n\n\n\nThis is used to remove all local branches that their remote counterparts have either been merged or deleted to clean up your local machine. Feel free to add –dry-run to the end of your git statement to see the result of running it without actually running it.\n\ngit fetch --prune\ngit branch -v|grep \"\\\\[gone\\\\]\"|awk '{print $1}'|xargs -I{} git branch -d {}"
+  },
+  {
+    "objectID": "tabs/git.html#git-commands",
+    "href": "tabs/git.html#git-commands",
+    "title": "Git",
+    "section": "",
+    "text": "when you have merge conflicts and you have deleted what you don’t want and kept what you do want, after this commit the new updates\n\ngit pull origin main\n\ngit add\n\n\n\n\n\ngit branch -d branch-to-delete\n\n\n\n\nThis is used to remove all local branches that their remote counterparts have either been merged or deleted to clean up your local machine. Feel free to add –dry-run to the end of your git statement to see the result of running it without actually running it.\n\ngit fetch --prune\ngit branch -v|grep \"\\\\[gone\\\\]\"|awk '{print $1}'|xargs -I{} git branch -d {}"
   }
 ]

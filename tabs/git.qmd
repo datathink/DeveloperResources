@@ -1,0 +1,33 @@
+---
+title: "Git"
+---
+
+## Git Commands
+
+### Merge the main branch into your current branch
+
+when you have merge conflicts and you have deleted what you don’t want and kept what you do want, after this commit the new updates
+```{python}
+#| eval: false
+git pull origin main
+
+git add
+```
+
+### Remove a singular branch from your local machine
+
+```{python}
+#| eval: false
+git branch -d branch-to-delete
+```
+
+### Remove all local branches that have been merged or deleted remotely
+
+This is used to remove all local branches that their remote counterparts have either been merged or deleted to clean up your local machine. Feel free to add --dry-run to the end of your git statement to see the result of running it without actually running it.
+
+```{python}
+#| eval: false
+
+git fetch --prune
+git branch -v|grep "\\[gone\\]"|awk '{print $1}'|xargs -I{} git branch -d {}
+```

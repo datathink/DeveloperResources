@@ -3,12 +3,13 @@ project:
   output-dir: docs
 
 website:
-  title: "DeveloperResources"
+  title: "DT Developer Resources"
   navbar:
     left:
-      - href: index.qmd
-        text: Home
-      - about.qmd
+
+      - href: tabs/r.qmd
+      - href: tabs/python.qmd
+      - href: tabs/git.qmd
 
 format:
   html:

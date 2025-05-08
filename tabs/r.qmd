@@ -1,0 +1,95 @@
+---
+title: "R"
+---
+
+::: panel-tabset
+## Package Development
+
+### Pacakge Creation
+
+### Testing
+
+### Documenting
+
+### Tips
+
+
+
+## Misc Information
+
+### Tidy Expressions vs. Standard Evaluation
+
+#### Tidy Expressions
+
+Tidy expressions are used in functions that leverage tidyselect syntax, like select(), pivot_wider(), and rename(). These functions support special selection helpers like starts_with(), ends_with(), and others. They don't work well with .data because they expect column names as strings or with selection helpers.
+
+#### Standard Evaluation
+
+Standard evaluation refers to functions that evaluate arguments directly without special tidyselect syntax. Functions like filter() and mutate() work well with .data\$variable because they evaluate expressions directly instead of converting them to strings.
+
+#### Summary
+
+Use .data\$variable for standard evaluation functions like filter().
+
+Use dplyr::all_of() for functions using tidyselect expressions like pivot_wider().
+
+### Functions & Quasiquotation ({{}}, !!, :=)
+
+When writing functions that accept column names as arguments, tidy evaluation tools come into play:
+
+{{}} (Curly-curly): Used within functions to embrace a column name. It is shorthand for enquo() and !!.
+
+!! (Bang-bang): Unquotes a captured expression, making it evaluated within the context of the data.
+
+:= (Colon-equals): Often used with dplyr::mutate() and dplyr::summarize() to dynamically assign names to columns.
+
+#### Example
+
+```{r, eval=FALSE}
+summarize_and_mutate <- function(data, group_var, stat_var, new_var_name, multiplier = 1) {
+    data %>%
+        dplyr::group_by({{ group_var }}) %>%
+        dplyr::summarize(mean_value = mean({{ stat_var }}, na.rm = TRUE)) %>%
+        dplyr::mutate("{new_var_name}" := mean_value * !!multiplier)
+}
+```
+
+### Common Errors
+
+#### 1:
+
+no visible binding for global variable ‘stat_name’
+
+```{r, eval=FALSE}
+dplyr::filter(stat_name == "N")
+```
+
+solution:
+
+```{r, eval=FALSE}
+dplyr::filter(.data$stat_name == "N")
+```
+
+no visible binding for global variable ‘variable’ no visible binding for global variable ‘stat’
+
+```{r, eval=FALSE}
+tidyr::pivot_wider(names_from = variable, values_from = stat)
+```
+
+our initial insinct is to use the following after what we just learned but this wont work because of pivot_wider is a tidy select expression like select and arrange
+
+```{r, eval=FALSE}
+tidyr::pivot_wider(names_from = .data$variable, values_from = .data$stat)
+
+# Use of .data in tidyselect expressions was deprecated in tidyselect 1.2.0.
+# i Please use `"stat"` instead of `.data$stat`
+```
+
+solution:
+
+```{r, eval=FALSE}
+tidyr::pivot_wider(names_from = dplyr::all_of("variable"), values_from = dplyr::all_of("stat"))
+```
+
+### RStudio Tips/Shortcuts
+:::
