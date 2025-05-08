@@ -1,6 +1,7 @@
 ---
 title: "DT Developer Resources"
 ---
+This is a one stop location for DataThink developers to reference and share their knowledge.
 
 This is a Quarto website.
 
