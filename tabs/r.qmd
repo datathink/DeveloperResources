@@ -5,7 +5,9 @@ title: "R"
 ::: panel-tabset
 ## Package Development
 
-### Pacakge Creation
+### Package Creation
+
+[R Packages Textbook}(https://r-pkgs.org/)
 
 ### Testing
 
