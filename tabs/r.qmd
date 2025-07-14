@@ -7,7 +7,7 @@ title: "R"
 
 ### Package Creation
 
-[R Packages Textbook}(https://r-pkgs.org/)
+[R Packages Textbook](https://r-pkgs.org/)
 
 ### Testing
 
